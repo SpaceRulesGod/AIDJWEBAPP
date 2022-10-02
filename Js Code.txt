@@ -1,0 +1,46 @@
+leftWristx = 0;
+leftWristy=0;
+rightWristx = 0;
+rightWristy =0;
+scoreleftWrist = 0;
+song2_status = "";
+song1_status = "";
+var silhouette = "";
+var colors = "";
+
+function preload(){
+    silhouette = loadSound("KANA-BOON - Silhouette.mp3");
+    colors = loadSound("Flow - COLORS.mp3");
+}
+function setup(){
+    canvas = createCanvas(600,500);
+    canvas.center();
+
+    video = createCapture(VIDEO);
+    video.hide();
+
+    posenet = ml5.poseNet(video, modelLoaded);
+    posenet.on('pose', gotPoses);
+}
+
+function draw(){
+    image(video,0,0,600,500);
+    fill("red");
+    stroke('red');
+    song1_status =  silhouette.isPlaying();
+    song2_status = colors.isPlaying();
+}
+function gotPoses(results){
+    if(results.length > 0){
+        console.log(results);
+        scoreleftWrist = reuselts[0].pose.keypoints[9].score;
+        console.log("Left Wrist Score is " + scoreleftWrist );
+        leftWristx=results[0].pose.leftWrist.x;
+        leftWristy=results[0].pose.leftWrist.y;
+        console.log("Left Wrist x is " + leftWristx+"Left Wrist y is " + leftWristy);
+
+        rightWristx=results[0].pose.rightWrist.x;
+        rightWristy=results[0].pose.rightWrist.y;
+        console.log("Right Wrist x is "+ rightWristx+"Right Wrist y is "+rightWristy);
+    }
+}
